@@ -1,0 +1,1541 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>我们的一周年 💕</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* 音乐控制器 */
+        .music-controller {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1001;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 50px;
+            padding: 10px 20px;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .music-controller:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .music-icon {
+            font-size: 1.2em;
+            animation: pulse 2s infinite;
+        }
+
+        .music-controller.paused .music-icon {
+            animation: none;
+        }
+
+        /* 导航栏 */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            padding: 15px 0;
+            transition: all 0.3s ease;
+        }
+
+        .nav-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            padding: 0 20px;
+        }
+
+        .nav-item {
+            color: white;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        .nav-item:hover,
+        .nav-item.active {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        /* 页面部分 */
+        .page-section {
+            min-height: 100vh;
+            display: none;
+            padding-top: 80px;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease;
+        }
+
+        .page-section.active {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* 首页 */
+        .hero {
+            text-align: center;
+            padding: 60px 0;
+            color: white;
+        }
+
+        .hero h1 {
+            font-size: 3.5em;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            animation: fadeInUp 1s ease;
+        }
+
+        .hero .subtitle {
+            font-size: 1.5em;
+            margin-bottom: 30px;
+            opacity: 0.9;
+            animation: fadeInUp 1s ease 0.3s both;
+        }
+
+        .countdown {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            margin: 40px auto;
+            max-width: 600px;
+            animation: fadeInUp 1s ease 0.6s both;
+        }
+
+        .countdown h2 {
+            margin-bottom: 20px;
+            font-size: 2em;
+        }
+
+        .time-display {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .time-unit {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            padding: 20px;
+            min-width: 80px;
+            text-align: center;
+        }
+
+        .time-number {
+            font-size: 2.5em;
+            font-weight: bold;
+            display: block;
+        }
+
+        .time-label {
+            font-size: 0.9em;
+            opacity: 0.8;
+        }
+
+        /* 关于我们页面 - 优化的云朵和天空元素 */
+        #about {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .sky-area {
+            position: relative;
+            height: 300px;
+            width: 100%;
+            margin-bottom: 30px;
+        }
+
+        .sky-elements {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+        }
+
+        /* 更自然的云朵样式 */
+        .cloud {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 50px;
+            opacity: 0.9;
+            animation: cloudFloat 20s ease-in-out infinite;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+            filter: drop-shadow(0 5px 15px rgba(0, 0, 0, 0.1));
+        }
+
+        .cloud:hover {
+            transform: scale(1.5);
+        }
+
+        .cloud::before,
+        .cloud::after {
+            content: '';
+            position: absolute;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 50px;
+        }
+
+        .cloud-1 {
+            width: 100px;
+            height: 60px;
+            top: 30px;
+            left: 20%;
+            animation-delay: 0s;
+        }
+
+        .cloud-1::before {
+            width: 50px;
+            height: 50px;
+            top: -25px;
+            left: 10px;
+        }
+
+        .cloud-1::after {
+            width: 60px;
+            height: 60px;
+            top: -30px;
+            right: 15px;
+        }
+
+        .cloud-2 {
+            width: 140px;
+            height: 80px;
+            top: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+            animation-delay: -5s;
+        }
+
+        .cloud-2::before {
+            width: 80px;
+            height: 80px;
+            top: -40px;
+            left: 20px;
+        }
+
+        .cloud-2::after {
+            width: 70px;
+            height: 70px;
+            top: -35px;
+            right: 20px;
+        }
+
+        .cloud-3 {
+            width: 90px;
+            height: 50px;
+            top: 180px;
+            right: 25%;
+            animation-delay: -10s;
+        }
+
+        .cloud-3::before {
+            width: 40px;
+            height: 40px;
+            top: -20px;
+            left: 15px;
+        }
+
+        .cloud-3::after {
+            width: 55px;
+            height: 55px;
+            top: -25px;
+            right: 10px;
+        }
+
+        .cloud-4 {
+            width: 110px;
+            height: 65px;
+            top: 120px;
+            left: 15%;
+            animation-delay: -15s;
+        }
+
+        .cloud-4::before {
+            width: 60px;
+            height: 60px;
+            top: -30px;
+            left: 20px;
+        }
+
+        .cloud-4::after {
+            width: 50px;
+            height: 50px;
+            top: -25px;
+            right: 25px;
+        }
+
+        @keyframes cloudFloat {
+
+            0%,
+            100% {
+                transform: translateX(0) translateY(0);
+            }
+
+            33% {
+                transform: translateX(20px) translateY(-10px);
+            }
+
+            66% {
+                transform: translateX(-15px) translateY(5px);
+            }
+        }
+
+        /* 飞行元素 */
+        .flying-item {
+            position: absolute;
+            font-size: 2.2em;
+            pointer-events: none;
+            text-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+            animation: fly 20s linear infinite;
+        }
+
+        .flying-pig {
+            animation: flyPig 18s linear infinite;
+        }
+
+        .flying-pig:nth-child(1) {
+            top: 15%;
+            left: -80px;
+            animation-delay: 0s;
+        }
+
+        .flying-pig:nth-child(2) {
+            top: 40%;
+            left: -80px;
+            animation-delay: -8s;
+            transform: scaleX(-1);
+            animation-name: flyPigReverse;
+        }
+
+        .flying-pig:nth-child(3) {
+            top: 65%;
+            left: -80px;
+            animation-delay: -12s;
+        }
+
+        .flying-icecream {
+            top: 25%;
+            left: -80px;
+            animation-delay: -3s;
+            animation-duration: 22s;
+        }
+
+        .flying-watermelon {
+            top: 55%;
+            left: -80px;
+            animation-delay: -6s;
+            animation-duration: 24s;
+        }
+
+        @keyframes fly {
+            0% {
+                transform: translateX(0) translateY(0);
+            }
+
+            25% {
+                transform: translateX(30vw) translateY(-15px);
+            }
+
+            50% {
+                transform: translateX(60vw) translateY(10px);
+            }
+
+            75% {
+                transform: translateX(90vw) translateY(-5px);
+            }
+
+            100% {
+                transform: translateX(120vw) translateY(0);
+            }
+        }
+
+        @keyframes flyPig {
+            0% {
+                transform: translateX(0) translateY(0) rotate(0deg);
+            }
+
+            25% {
+                transform: translateX(30vw) translateY(-20px) rotate(5deg);
+            }
+
+            50% {
+                transform: translateX(60vw) translateY(15px) rotate(-3deg);
+            }
+
+            75% {
+                transform: translateX(90vw) translateY(-10px) rotate(2deg);
+            }
+
+            100% {
+                transform: translateX(120vw) translateY(0) rotate(0deg);
+            }
+        }
+
+        @keyframes flyPigReverse {
+            0% {
+                transform: translateX(120vw) translateY(0) scaleX(-1) rotate(0deg);
+            }
+
+            25% {
+                transform: translateX(90vw) translateY(10px) scaleX(-1) rotate(-2deg);
+            }
+
+            50% {
+                transform: translateX(60vw) translateY(-15px) scaleX(-1) rotate(3deg);
+            }
+
+            75% {
+                transform: translateX(30vw) translateY(5px) scaleX(-1) rotate(-5deg);
+            }
+
+            100% {
+                transform: translateX(0vw) translateY(0) scaleX(-1) rotate(0deg);
+            }
+        }
+
+        .falling-item {
+            position: absolute;
+            font-size: 30px;
+            pointer-events: none;
+            z-index: 10;
+            animation: fall 3s ease-in forwards;
+        }
+
+        @keyframes fall {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 1;
+            }
+
+            100% {
+                transform: translateY(500px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        .about-content {
+            position: relative;
+            z-index: 5;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: start;
+        }
+
+        .about-text {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(15px);
+            border-radius: 20px;
+            padding: 40px;
+            color: white;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .about-text h2 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            color: #ffd700;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .about-text p {
+            font-size: 1.2em;
+            line-height: 1.8;
+            margin-bottom: 15px;
+        }
+
+        .first-meeting {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            border-left: 4px solid #ffd700;
+        }
+
+        .talents-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .talent-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .talent-emoji {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .zodiac-section {
+            display: flex;
+            justify-content: space-around;
+            margin: 30px 0;
+        }
+
+        .zodiac-item {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+            flex: 1;
+            margin: 0 10px;
+        }
+
+        .zodiac-emoji {
+            font-size: 3em;
+            margin-bottom: 10px;
+        }
+
+        .interests-section {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(15px);
+            border-radius: 20px;
+            padding: 40px;
+            color: white;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .interests-section h2 {
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            color: #ffd700;
+            text-align: center;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .interests-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .interest-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .interest-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .interest-emoji {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .interest-card h3 {
+            color: #ffd700;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        .interest-card p {
+            font-size: 0.9em;
+            line-height: 1.4;
+        }
+
+        /* 时间轴回忆页面 */
+        .timeline-container {
+            position: relative;
+            margin: 50px 0;
+            padding: 20px 0;
+        }
+
+        .timeline-line {
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: linear-gradient(to bottom, #ffd700, #ff6b9d);
+            transform: translateX(-50%);
+        }
+
+        .timeline-item {
+            position: relative;
+            margin: 60px 0;
+            opacity: 0;
+            transform: translateY(50px);
+            animation: slideInTimeline 0.8s ease forwards;
+        }
+
+        .timeline-item:nth-child(odd) {
+            animation-delay: 0.2s;
+        }
+
+        .timeline-item:nth-child(even) {
+            animation-delay: 0.4s;
+        }
+
+        .timeline-item:nth-child(3) {
+            animation-delay: 0.6s;
+        }
+
+        .timeline-content {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            width: 45%;
+            color: white;
+            position: relative;
+        }
+
+        .timeline-item:nth-child(odd) .timeline-content {
+            margin-left: 0;
+            margin-right: auto;
+            transform: rotate(-2deg);
+        }
+
+        .timeline-item:nth-child(even) .timeline-content {
+            margin-left: auto;
+            margin-right: 0;
+            transform: rotate(2deg);
+        }
+
+        .timeline-content:hover {
+            transform: rotate(0deg) scale(1.02);
+            transition: all 0.3s ease;
+        }
+
+        .timeline-dot {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            width: 20px;
+            height: 20px;
+            background: #ffd700;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 2;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+        }
+
+        .timeline-date {
+            color: #ffd700;
+            font-weight: bold;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        .timeline-title {
+            font-size: 1.4em;
+            margin-bottom: 15px;
+            color: #ff6b9d;
+        }
+
+        .timeline-description {
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .photo-placeholder {
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px dashed #ffd700;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            color: #ffd700;
+            margin: 20px 0;
+            font-style: italic;
+        }
+
+        /* ... 已有代码 ... */
+        .photo-placeholder.two-photos {
+            display: flex;
+            gap: 10px;
+            /* 两张图片之间的间距 */
+            justify-content: center;
+            /* 水平居中 */
+            border: none;
+            /* 移除虚线边框 */
+            background: transparent;
+            /* 移除背景色 */
+        }
+
+        .photo-placeholder.two-photos img {
+            width: 50%;
+            /* 每张图片占据容器宽度的 50% */
+            height: auto;
+            /* 高度自动适应，保持原比例 */
+            object-fit: contain;
+            /* 图片完整显示在容器内 */
+        }
+
+        .additional-images {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            /* 两行两列布局 */
+            gap: 10px;
+            /* 图片间距 */
+            margin-top: 20px;
+            /* 与上方内容的间距 */
+        }
+
+        .additional-image {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+            /* 图片圆角 */
+            object-fit: cover;
+            /* 图片填充方式 */
+        }
+
+        .photo-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            /* 每行显示 4 张照片 */
+            gap: 10px;
+            /* 照片之间的间距 */
+            margin: 20px 0;
+            /* 与上下内容的间距 */
+        }
+
+        .photo-grid img {
+            width: 100%;
+            /* 图片宽度自适应网格 */
+            height: 300px;
+            /* 固定图片高度 */
+            object-fit: cover;
+            /* 图片填充方式 */
+            border-radius: 10px;
+            /* 图片圆角 */
+        }
+
+        /* 修改 photo-grid 样式为横向布局 */
+        .photo-grid.full-width {
+            display: flex;
+            flex-wrap: nowrap;
+            /* 禁止换行 */
+            gap: 10px;
+            /* 照片之间的间距 */
+            margin: 20px 0;
+            overflow-x: auto;
+            /* 添加水平滚动条 */
+        }
+
+        .photo-grid.full-width img {
+            width: auto;
+            height: 300px;
+            /* 固定图片高度 */
+            object-fit: cover;
+            /* 图片填充方式 */
+            border-radius: 10px;
+            /* 图片圆角 */
+        }
+
+        .bottom-photo-wall {
+            margin-top: 40px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .bottom-photo-wall .photo-grid.full-width {
+            display: flex;
+            flex-wrap: nowrap;
+            gap: 10px;
+            overflow-x: auto;
+        }
+
+        .bottom-photo-wall .photo-grid.full-width img {
+            width: auto;
+            height: 300px;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+
+        .show-photo-wall-btn {
+            background: linear-gradient(45deg, #ffd700, #ff6b9d);
+            border: none;
+            border-radius: 50px;
+            padding: 15px 30px;
+            color: white;
+            font-size: 1.1em;
+            cursor: pointer;
+            margin: 20px auto;
+            display: block;
+            transition: all 0.3s ease;
+        }
+
+        .show-photo-wall-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.3);
+        }
+
+        /* 生日祝福页面 */
+        .birthday-content {
+            text-align: center;
+            padding: 60px 0;
+            color: white;
+        }
+
+        .birthday-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 50px;
+            margin: 40px auto;
+            max-width: 800px;
+        }
+
+        .birthday-card h2 {
+            font-size: 2.5em;
+            color: #ffd700;
+            margin-bottom: 20px;
+        }
+
+        .birthday-date {
+            font-size: 1.5em;
+            margin: 20px 0;
+            color: #ffb6c1;
+        }
+
+        .birthday-image-gallery {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            gap: 15px;
+            margin: 40px 0;
+        }
+
+        .birthday-image-gallery img {
+            width: 31%;
+            aspect-ratio: 4 / 3;
+            object-fit: cover;
+            border-radius: 15px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease;
+        }
+
+        .birthday-image-gallery img:hover {
+            transform: scale(1.05) rotate(1deg);
+        }
+
+        .voice-message {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+            text-align: left;
+        }
+
+        .voice-message h3 {
+            color: #ffd700;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .typing-container {
+            position: relative;
+            min-height: 200px;
+        }
+
+        .typed-text {
+            font-size: 1.2em;
+            line-height: 1.8;
+            color: white;
+        }
+
+        .cursor {
+            display: inline-block;
+            width: 2px;
+            height: 1.2em;
+            background-color: #ffd700;
+            margin-left: 2px;
+            animation: blink 1s infinite;
+        }
+
+        .play-voice-btn {
+            background: linear-gradient(45deg, #ffd700, #ff6b9d);
+            border: none;
+            border-radius: 50px;
+            padding: 15px 30px;
+            color: white;
+            font-size: 1.1em;
+            cursor: pointer;
+            margin: 20px 0;
+            transition: all 0.3s ease;
+        }
+
+        .play-voice-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.3);
+        }
+
+        /* 动画 */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideInTimeline {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.1);
+            }
+        }
+
+        @keyframes blink {
+
+            0%,
+            50% {
+                opacity: 1;
+            }
+
+            51%,
+            100% {
+                opacity: 0;
+            }
+        }
+
+        /* 浮动元素 */
+        .floating-hearts {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .heart {
+            position: absolute;
+            color: rgba(255, 182, 193, 0.3);
+            font-size: 20px;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(100vh) rotate(0deg);
+            }
+
+            50% {
+                transform: translateY(-100px) rotate(180deg);
+            }
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5em;
+            }
+
+            .hero .subtitle {
+                font-size: 1.2em;
+            }
+
+            .about-content {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-content {
+                gap: 15px;
+            }
+
+            .time-display {
+                gap: 10px;
+            }
+
+            .time-unit {
+                min-width: 60px;
+                padding: 15px;
+            }
+
+            .time-number {
+                font-size: 2em;
+            }
+
+            .timeline-line {
+                left: 30px;
+            }
+
+            .timeline-content {
+                width: calc(100% - 80px);
+                margin-left: 60px !important;
+            }
+
+            .timeline-dot {
+                left: 30px;
+            }
+
+            .timeline-item:nth-child(odd) .timeline-content,
+            .timeline-item:nth-child(even) .timeline-content {
+                transform: rotate(0deg);
+            }
+
+            .talents-section {
+                grid-template-columns: 1fr;
+            }
+
+            .interests-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .birthday-image-gallery {
+                flex-direction: column;
+            }
+
+            .birthday-image-gallery img {
+                width: 90%;
+            }
+
+            .cloud {
+                transform: scale(0.8);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- 音乐控制器 -->
+    <div class="music-controller" onclick="toggleMusic()">
+        <span class="music-icon" id="musicIcon">🎵</span>
+        <span id="musicStatus">播放中</span>
+    </div>
+
+    <!-- 音频元素 -->
+    <audio id="backgroundMusic" loop>
+        <source src="music/爱很简单.mp3" type="audio/mpeg">
+    </audio>
+    <!-- 添加新的音频元素 -->
+    <audio id="voiceMessage" src="music/my_voice_minimax_v1.mp3"></audio>
+
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="nav-content">
+            <a href="#" class="nav-item active" onclick="showPage('home')">首页</a>
+            <a href="#" class="nav-item" onclick="showPage('about')">关于我们</a>
+            <a href="#" class="nav-item" onclick="showPage('memories')">美好回忆</a>
+            <a href="#" class="nav-item" onclick="showPage('birthday')">生日祝福</a>
+        </div>
+    </nav>
+
+    <!-- 浮动爱心 -->
+    <div class="floating-hearts" id="hearts"></div>
+
+    <div class="container">
+        <!-- 首页 -->
+        <section id="home" class="page-section active">
+            <div class="hero">
+                <h1>我们的一周年 💕</h1>
+                <p class="subtitle">从羽毛球场的初遇，到如今的相知相伴</p>
+                <div class="countdown">
+                    <h2>距离我们的纪念日</h2>
+                    <div class="time-display" id="countdown">
+                        <div class="time-unit"><span class="time-number" id="days">--</span><span
+                                class="time-label">天</span></div>
+                        <div class="time-unit"><span class="time-number" id="hours">--</span><span
+                                class="time-label">小时</span></div>
+                        <div class="time-unit"><span class="time-number" id="minutes">--</span><span
+                                class="time-label">分钟</span></div>
+                        <div class="time-unit"><span class="time-number" id="seconds">--</span><span
+                                class="time-label">秒</span></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 关于我们 (已优化) -->
+        <section id="about" class="page-section">
+            <div class="sky-area">
+                <div class="sky-elements">
+                    <!-- 飞行的猪 -->
+                    <div class="flying-item flying-pig">🐖</div>
+                    <div class="flying-item flying-pig">🎱</div>
+                    <div class="flying-item flying-pig">🐷</div>
+
+                    <!-- 飞行的冰淇淋 -->
+                    <div class="flying-item flying-icecream">🍦</div>
+
+                    <!-- 飞行的西瓜 -->
+                    <div class="flying-item flying-watermelon">🍉</div>
+
+                    <!-- 更自然的云朵 -->
+                    <div class="cloud cloud-1" onclick="dropRandomItem(event)"></div>
+                    <div class="cloud cloud-2" onclick="dropRandomItem(event)"></div>
+                    <div class="cloud cloud-3" onclick="dropRandomItem(event)"></div>
+                    <div class="cloud cloud-4" onclick="dropRandomItem(event)"></div>
+                </div>
+            </div>
+            <div class="about-content">
+                <div class="about-text">
+                    <h2>关于我们 🌟</h2>
+                    <p>2024年7月23日，我们开始了这段美妙的旅程。</p>
+                    <div class="first-meeting">
+                        <h3 style="color: #ffd700; margin-bottom: 10px;">🏸 初遇</h3>
+                        <p>还记得第一次见面时你停不下来的笑容</p>
+                    </div>
+                    <!-- 移除占位提示，插入图片 -->
+                    <div class="photo-placeholder tow-photos">
+                        <img src="比耶照片.JPG" alt="你的身影" height="300">
+                        <img src="船上侧脸.JPG" alt="你的身影" height="300">
+                    </div>
+                    <p>你是一个外表乖巧却内心酷拽飒的女孩，拥有着令人惊艳的才华。</p>
+                    <div class="talents-section">
+                        <div class="talent-card">
+                            <div class="talent-emoji">🎨</div>
+                            <h4>绘画天赋</h4>
+                            <p>你的画笔记录着我们的每一个美好瞬间，那些画作比照片更温暖。</p>
+                        </div>
+                        <div class="talent-card">
+                            <div class="talent-emoji">✍️</div>
+                            <h4>文字才华</h4>
+                            <p>你的文章曾登上报纸，优美的文笔总是让我惊讶。</p>
+                        </div>
+                    </div>
+                    <div class="photo-placeholder tow-photos">
+                        <img src="合影1.JPG" alt="你的身影" height="300">
+                        <img src="三叉矶大桥夜晚.jpg" alt="图片2" height="300">
+                    </div>
+
+                </div>
+                <div class="interests-section">
+                    <h2>她的小美好 💖</h2>
+                    <div class="interests-grid">
+                        <div class="interest-card">
+                            <div class="interest-emoji">🐷</div>
+                            <h3>可爱的小猪</h3>
+                            <p>可爱的你对可爱的小猪情有独钟，那份纯真的喜悦总是感染着我。</p>
+                        </div>
+                        <div class="interest-card">
+                            <div class="interest-emoji">🍰</div>
+                            <h3>提拉米苏</h3>
+                            <p>甜蜜的提拉米苏就像我们的爱情，层层叠叠，每一口都是幸福的味道。</p>
+                        </div>
+                        <div class="interest-card">
+                            <div class="interest-emoji">🥭</div>
+                            <h3>香甜芒果</h3>
+                            <p>小小芒果让你欢喜让我忧┭┮﹏┭┮。</p>
+                        </div>
+                        <div class="interest-card">
+                            <div class="interest-emoji">🏎️</div>
+                            <h3>速度与激情</h3>
+                            <p>谁说乖乖女不能有酷炫的一面？你对《速激》的喜爱展现了你内心的那份热血。</p>
+                        </div>
+                        <div class="interest-card">
+                            <div class="interest-emoji">📚</div>
+                            <h3>阅读与写作</h3>
+                            <p>书香气质的你，用文字编织着美丽的世界。</p>
+                        </div>
+                        <div class="interest-card">
+                            <div class="interest-emoji">🎨</div>
+                            <h3>绘画创作</h3>
+                            <p>你的会经常用小手记录诞生的无数美好，每一幅作品都承载着你的情感和我们的回忆。</p>
+                        </div>
+
+                    </div>
+                    <div class="additional-images">
+                        <img src="吃冰淇淋.jpg" alt="图片1" class="additional-image">
+                        <img src="甜点比耶.jpg" alt="图片3" class="additional-image">
+                        <img src="四只猪.gif" alt="图片4" class="additional-image">
+                        <img src="漫画踢腿.jpg" alt="图片4" class="additional-image">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 美好回忆时间轴 -->
+        <section id="memories" class="page-section">
+            <div class="hero">
+                <h1>我们的美好时光 📸</h1>
+                <p class="subtitle">每一个瞬间都是最珍贵的回忆</p>
+            </div>
+            <div class="timeline-container">
+                <div class="timeline-line"></div>
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-date">2024年6月与7月</div>
+                        <div class="timeline-title">🏎️🏸 初遇</div>
+                        <div class="timeline-description"></div>
+                        <div class="photo-placeholder">
+                            <img src="timeline/相遇/烟花.png" alt="你的身影" height="300">
+                        </div>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-date">2024年8月26日</div>
+                        <div class="timeline-title">🎆 夕阳</div>
+                        <div class="timeline-description">那次的夕阳很美，但更重要的是和你在一起</div>
+                        <div class="photo-placeholder">
+                            <img src="timeline/夕阳/夕阳合集.png" alt="你的身影" height="300">
+                        </div>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-date">2024年七夕</div>
+                        <div class="timeline-title">🎨 七夕</div>
+                        <div class="timeline-description">第一次穿了情侣衫，同时也获得了第一个表情包</div>
+                        <div class="photo-placeholder">
+                            <img src="timeline/七夕/七夕合集.png" alt="你的身影" height="300">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-date">2024年10月</div>
+                        <div class="timeline-title">💕 第一次一起看祖国的大好风光</div>
+                        <div class="timeline-description">第一次相处这么长时间，一路上的你我虽免不了琐碎拌嘴，但都快乐非常</div>
+                        <div class="photo-grid full-width">
+                            <img src="timeline/西藏/西藏合集.png" alt="照片1" height="300">
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+            <!-- 点击按钮 -->
+            <button id="showPhotoWallBtn" class="show-photo-wall-btn">点击更多精彩哦</button>
+            <!-- 底部照片墙，添加 id 并默认隐藏 -->
+            <div id="bottomPhotoWall" class="bottom-photo-wall" style="display: none;">
+                <div class="photo-grid full-width">
+                    <img src="timeline/拽姐登场.gif" alt="照片3" height="300">
+                    <img src="timeline/Ms_zhuai.png" alt="照片3" height="300">
+                    <img src="timeline/先来看看jiojio.gif" alt="照片3" height="300">
+                    <img src="timeline/jiojios.jpg" alt="照片2" height="300">
+                    <img src="timeline/再来瞧瞧shoushou.gif" alt="照片3" height="300">
+                    <img src="timeline/no_s.png" alt="照片4" height="300">
+                    <img src="timeline/搞错了再来.gif" alt="照片3" height="300">
+                    <img src="timeline/ye_pair.png" alt="照片5" height="300">
+                    <img src="timeline/ye_s.png" alt="照片6" height="300">
+                    <img src="timeline/侧脸we.png" alt="照片7" height="300">
+                    <img src="timeline/侧脸笑.jpg" alt="照片8" height="300">
+                    <img src="timeline/bjtu.jpg" alt="照片1" height="300">
+                    <img src="timeline/北京自行车.jpg" alt="照片9" height="300">
+                    <img src="timeline/古巴咖啡.jpg" alt="照片10" height="300">
+                    <img src="timeline/夕阳侧脸.png" alt="照片11" height="300">
+                    <img src="timeline/背影.png" alt="照片12" height="300">
+                    <img src="timeline/西藏/雪山秋千.gif" alt="照片12" height="300">
+                </div>
+            </div>
+
+    </div>
+    </section>
+
+
+    <!-- 生日祝福 -->
+    <section id="birthday" class="page-section">
+        <div class="birthday-content">
+            <h1>生日快乐，我的宝贝 🎂</h1>
+            <div class="birthday-card">
+                <h2>🎈 特别的日子 🎈</h2>
+                <div class="birthday-date">农历六月二十四<br>2025年7月18日</div>
+                <div class="birthday-image-gallery">
+                    <img src="D:\PersonalProject\Code\ideas\台球2.gif" alt="我们一起打桌球">
+                    <img src="D:\PersonalProject\Code\ideas\夕阳视频2.gif" alt="我们的拥抱">
+                    <img src="D:\PersonalProject\Code\ideas\赛车.gif" alt="我们一起赛车">
+                </div>
+                <div class="voice-message">
+                    <h3>💌 来自我心底的话</h3>
+                    <button class="play-voice-btn" onclick="startTyping()">🎙️ 点击听我想对你说的话</button>
+                    <div class="typing-container">
+                        <div class="typed-text" id="typedText"></div>
+                        <span class="cursor" id="cursor" style="display: none;"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    </div>
+
+    <script>
+        let currentMusic = null;
+        let isPlaying = false;
+
+        const backgroundMusic = document.getElementById('backgroundMusic');
+        const memoryMusic = document.getElementById('memoryMusic');
+        const birthdayMusic = document.getElementById('birthdayMusic');
+
+        function toggleMusic() {
+            const musicIcon = document.getElementById('musicIcon');
+            const musicStatus = document.getElementById('musicStatus');
+            if (!currentMusic) return;
+
+            isPlaying = !isPlaying;
+            if (isPlaying) {
+                currentMusic.play().catch(e => console.error("音乐播放失败:", e));
+                musicIcon.textContent = '🎶';
+                musicStatus.textContent = '播放中';
+                document.querySelector('.music-controller').classList.remove('paused');
+            } else {
+                currentMusic.pause();
+                musicIcon.textContent = '🎵';
+                musicStatus.textContent = '已暂停';
+                document.querySelector('.music-controller').classList.add('paused');
+            }
+        }
+
+        function switchMusic(musicElement) {
+            if (currentMusic && !currentMusic.paused) {
+                currentMusic.pause();
+                currentMusic.currentTime = 0;
+            }
+            currentMusic = musicElement;
+            if (isPlaying && currentMusic) {
+                currentMusic.play().catch(e => console.error("切换音乐播放失败:", e));
+            }
+        }
+
+        function showPage(pageId) {
+            const pages = document.querySelectorAll('.page-section');
+            pages.forEach(page => page.classList.remove('active'));
+            const navItems = document.querySelectorAll('.nav-item');
+            navItems.forEach(item => item.classList.remove('active'));
+
+            setTimeout(() => {
+                document.getElementById(pageId).classList.add('active');
+            }, 100);
+
+            document.querySelector(`.nav-item[onclick="showPage('${pageId}')"]`).classList.add('active');
+
+            // switch (pageId) {
+            //     case 'memories': switchMusic(memoryMusic); break;
+            //     case 'birthday': switchMusic(birthdayMusic); break;
+            //     default: switchMusic(backgroundMusic); break;
+            // }
+        }
+
+        function updateCountdown() {
+            const anniversaryDate = new Date('2025-07-14T00:00:00');
+            const now = new Date();
+            const diff = anniversaryDate - now;
+
+            if (diff > 0) {
+                const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+                document.getElementById('days').textContent = days;
+                document.getElementById('hours').textContent = hours;
+                document.getElementById('minutes').textContent = minutes;
+                document.getElementById('seconds').textContent = seconds;
+            } else {
+                document.getElementById('countdown').innerHTML = "<h2>❤️ 纪念日快乐！❤️</h2>";
+            }
+        }
+
+        const fallingItemsList = ['🐷', '🐭', '🐍', '🎱', '🥭', '🍰', '🏎️', '🍦', '🍉'];
+        function dropRandomItem(event) {
+            const randomItem = fallingItemsList[Math.floor(Math.random() * fallingItemsList.length)];
+            const fallingItem = document.createElement('div');
+            fallingItem.className = 'falling-item';
+            fallingItem.textContent = randomItem;
+
+            const cloudRect = event.target.getBoundingClientRect();
+            fallingItem.style.left = (cloudRect.left + window.scrollX + cloudRect.width / 2) + 'px';
+            fallingItem.style.top = (cloudRect.top + window.scrollY + cloudRect.height / 2) + 'px';
+
+            document.body.appendChild(fallingItem);
+
+            setTimeout(() => {
+                if (fallingItem.parentNode) {
+                    fallingItem.parentNode.removeChild(fallingItem);
+                }
+            }, 3000);
+        }
+
+        let typingInProgress = false;
+        const message = `亲爱的宝儿、宝贝、宝宝，
+
+今天是我们认识一年的日子，也是快到了你生日的时候。这一年来，你给我的生活带来了超多的惊喜和快乐。
+
+或许就像这首歌所说，“忘了是怎么开始”，虽然已经记不起我们第一次相遇时，你的模样，但在一年的日子里，见到了更多你的样子。
+
+你的才华让我惊艳 - 你的画笔记录着我们的美好时光，你的文字温暖着我的心。你乖乖的外表下，温柔的内心中，还藏着一颗酷、拽、飒的心，就像你喜欢速度与激情一样，充满活力与激情。
+
+虽然我的记性没有你那么好，但是我也在努力记住：你喜欢可爱的小猪，爱吃甜甜的提拉米苏和我“讨厌”的芒果（嘿嘿，其实也还好）。
+
+很多时候，我确实没有太多的仪式感，也不够浪漫，还不会哄人，但是这次，我会像我说过的，属于我们俩的日子，我会好好地对待，希望你喜欢。
+
+一周年快乐，我最可爱的宝！💕
+
+永远爱你的小气鬼、小帅、宝宝、杜杜（果然可能还是最喜欢这个称呼）`;
+
+        function startTyping() {
+            if (typingInProgress) return;
+            typingInProgress = true;
+
+            const typedTextElement = document.getElementById('typedText');
+            const cursorElement = document.getElementById('cursor');
+            const button = document.querySelector('.play-voice-btn');
+            // 获取音频元素
+            const voiceMessage = document.getElementById('voiceMessage');
+
+            button.style.display = 'none';
+            typedTextElement.textContent = '';
+            cursorElement.style.display = 'inline-block';
+
+            // 播放音频
+            voiceMessage.play().catch(e => console.error("语音消息播放失败:", e));
+            // 计算每个字符的显示时间，根据音频时长和消息长度计算
+            const totalDuration = voiceMessage.duration;
+            const charInterval = (totalDuration / message.length) * 1000;
+
+            let index = 0;
+            const typingInterval = setInterval(() => {
+                if (index < message.length) {
+                    if (message[index] === '\n') {
+                        typedTextElement.innerHTML += '<br>';
+                    } else {
+                        typedTextElement.textContent += message[index];
+                    }
+                    index++;
+                } else {
+                    clearInterval(typingInterval);
+                    // setTimeout(() => {
+                    //     cursorElement.style.display = 'none';
+                    //     typingInProgress = false;
+                    //     // 音频播放结束后暂停
+                    //     voiceMessage.pause();
+                    //     voiceMessage.currentTime = 0;
+                    // }, 2000);
+                    // 监听音频播放结束事件
+                    voiceMessage.addEventListener('ended', () => {
+                        cursorElement.style.display = 'none';
+                        typingInProgress = false;
+                        // 音频播放结束后重置
+                        voiceMessage.currentTime = 0;
+                    }, { once: true });
+                }
+            }, charInterval); // 50
+        }
+
+        function createFloatingHearts() {
+            const heartsContainer = document.getElementById('hearts');
+            const heartSymbols = ['💕', '💖', '💗', '💙', '💜', '🤍'];
+            setInterval(() => {
+                if (Math.random() < 0.3) {
+                    const heart = document.createElement('div');
+                    heart.className = 'heart';
+                    heart.textContent = heartSymbols[Math.floor(Math.random() * heartSymbols.length)];
+                    heart.style.left = Math.random() * 100 + 'vw';
+                    heart.style.animationDuration = (Math.random() * 3 + 4) + 's';
+                    heart.style.fontSize = (Math.random() * 10 + 15) + 'px';
+                    heart.style.opacity = Math.random() * 0.5 + 0.3;
+                    heartsContainer.appendChild(heart);
+                    setTimeout(() => heart.remove(), 7000);
+                }
+            }, 1000);
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            updateCountdown();
+            setInterval(updateCountdown, 1000);
+            createFloatingHearts();
+
+            currentMusic = backgroundMusic;
+            document.querySelector('.music-controller').classList.add('paused');
+            document.getElementById('musicStatus').textContent = '已暂停';
+
+            document.body.addEventListener('click', function () {
+                if (!isPlaying && currentMusic.paused) {
+                    console.log("用户已与页面交互，现在可以播放音乐了。");
+                }
+            }, { once: true });
+        });
+
+
+        document.addEventListener('DOMContentLoaded', function () {
+            // ... 已有初始化代码 ...
+
+            const showPhotoWallBtn = document.getElementById('showPhotoWallBtn');
+            const bottomPhotoWall = document.getElementById('bottomPhotoWall');
+
+            if (showPhotoWallBtn && bottomPhotoWall) {
+                showPhotoWallBtn.addEventListener('click', function () {
+                    if (bottomPhotoWall.style.display === 'none') {
+                        bottomPhotoWall.style.display = 'block';
+                        // 点击后隐藏按钮
+                        this.style.display = 'none';
+                    }
+                });
+            }
+        });
+
+    </script>
+</body>
+
+</html>
